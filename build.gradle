@@ -1,0 +1,76 @@
+buildscript {
+    ext.kotlin_version = '1.2.21'
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'com.github.mydogtom'
+version '0.1'
+
+apply plugin: 'kotlin'
+
+repositories {
+    jcenter()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    def ktlint_version = '0.15.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compileOnly "com.github.shyiko.ktlint:ktlint-core:$ktlint_version"
+    testCompile "com.github.shyiko.ktlint:ktlint-core:$ktlint_version"
+
+    testCompile "junit:junit:4.12"
+    testCompile 'org.assertj:assertj-core:3.5.2'
+    testCompile "com.github.shyiko.ktlint:ktlint-test:$ktlint_version"
+
+    ktlint "com.github.shyiko:ktlint:$ktlint_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task ktlint(type: JavaExec, dependsOn: classes) {
+    main = 'com.github.shyiko.ktlint.Main'
+    // adding compiled classes to the classpath so that ktlint would validate project's sources
+    // using its own ruleset (in other words to dogfood)
+    classpath = configurations.ktlint + sourceSets.main.output
+    args '--debug', 'src/**/*.kt'
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    // adding compiled classes to the classpath so that ktlint would validate project's sources
+    // using its own ruleset (in other words to dogfood)
+    classpath = configurations.ktlint + sourceSets.main.output
+    main = "com.github.shyiko.ktlint.Main"
+    args "-F", "src/**/*.kt"
+}

@@ -7,6 +7,7 @@ import com.github.shyiko.ktlint.core.RuleSetProvider
 class CustomRuleSetProvider : RuleSetProvider {
 
     override fun get(): RuleSet = RuleSet("custom",
-        ClassAndFunctionHeaderFormatRule()
+        ClassAndFunctionHeaderFormatRule(),
+        IndentationRule()
     )
 }

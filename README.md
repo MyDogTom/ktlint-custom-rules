@@ -14,7 +14,7 @@ Verifies indentatin size.
 ### ClassAndFunctionHeaderFormatRule
 Verifies class and function header formatting according to https://android.github.io/kotlin-guides/style.html#functions
 
-Example of valid header
+Valid header example:
 ```kotlin
 fun <T> Iterable<T>.joinToString(
     separator: CharSequence = ", ",

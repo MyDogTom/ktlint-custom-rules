@@ -38,7 +38,7 @@ configurations {
 }
 
 dependencies {
-    def ktlint_version = '0.15.0'
+    def ktlint_version = '0.15.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compileOnly "com.github.shyiko.ktlint:ktlint-core:$ktlint_version"
     testCompile "com.github.shyiko.ktlint:ktlint-core:$ktlint_version"
